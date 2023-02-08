@@ -1,11 +1,42 @@
+// request for data using access token
 GET http://localhost:3000/posts
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibWFyaWEiLCJpYXQiOjE2NzU3Mjk0NzV9.OfV1IpKs9kEitB0d6TCEqzrLMHpjy3Sp4js9GFoJceA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiam9hbyIsImlhdCI6MTY3NTc4Njg5OCwiZXhwIjoxNjc1Nzg2OTE4fQ.cUmHFtx9k8kty8yA6ZY6UzjvjhKJo71Q1h_OrlTNA3Y
 
 ###
-
-POST http://localhost:3000/login
+//delete refresh token
+DELETE http://localhost:4000/logout
 Content-Type: application/json
 
 {
-    "username": "maria"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiam9hbyIsImlhdCI6MTY3NTc4Njg0M30.ENLUayRwtCJYRIQ4tYHUyBoNyfwep0xuXCCfjQWqudk"
+}
+
+###
+// refresh access token
+POST http://localhost:4000/token
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiam9hbyIsImlhdCI6MTY3NTc4Njg0M30.ENLUayRwtCJYRIQ4tYHUyBoNyfwep0xuXCCfjQWqudk" 
+}
+
+###
+//receive the first access token
+POST http://localhost:4000/login
+Content-Type: application/json
+Authorization: {
+    "username": "joao",
+    "password":"123"
+}
+
+###
+GET http://localhost:4000/users
+
+###
+POST http://localhost:4000/users
+Content-Type: application/json
+
+{
+    "username": "maria",
+    "password": "456"
 }

@@ -2,8 +2,10 @@ require('dotenv').config(); //enviroment variables
 
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const dados = [
@@ -22,21 +24,18 @@ const dados = [
 ]
 
 app.get('/posts',authenticateToken,(req,res)=>{
+    console.log('posts');
     res.json(dados.filter(dado => dado.username===req.user.name));
 })
 
-app.post('/login',(req,res)=>{
-    // AUTHENTICATE THE USER WITHIN DB
-    console.log('/login');
-    const username = req.body.username;
-    const payload = { name: username };
-    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
-    console.log('access token: '+accessToken);
-    res.json(accessToken);
-})
-
 function authenticateToken (req, res, next) {
-    const authHeader = req.headers['authorization'];
+    console.log('begin authenticateToken');
+    if (!req.headers.authorization) {
+        console.log('no authentication header provided');
+        console.log('end authenticate token');
+        return res.sendStatus(403);
+    }
+    const authHeader = JSON.parse(req.headers.authorization).token;
     console.log(authHeader);
     const token = authHeader && authHeader.split(' ')[1]; // returns undefined if authHeader does not exists
     console.log(token);
