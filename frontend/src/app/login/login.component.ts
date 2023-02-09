@@ -45,25 +45,12 @@ export class LoginComponent  {
         console.log('refreshToken: '+teste.refreshToken);
         const authToken = {token:'Bearer '+teste.accessToken};
         console.log('authToken:'+authToken.token);
-        // const myHeadersA = new Headers({
-        //   'Content-Type': 'application/json',
-        //   'Authorization': JSON.stringify(authToken)
-        // });
-        fetch('http://localhost:3000/posts', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': JSON.stringify(authToken)
-            }
-        })
-        .then(response =>{
-          return response.json();
-            // console.log(JSON.stringify(response.body));
-            // console.log('router');
-            // this._router.navigate(['dashboard']);
-        }).then(data=>{
-          console.log(data);
-        })
+        sessionStorage.setItem("accessToken", teste.accessToken);
+        sessionStorage.setItem("refreshToken", teste.refreshToken);
+        console.log('leaving login page!!!')
+        this._router.navigate(['dashboard']);
+        
+        
       }).catch(e => {
         console.log(e);
       });
