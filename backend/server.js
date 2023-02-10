@@ -23,9 +23,23 @@ const dados = [
     }
 ]
 
+const DBmovimentacao = [{
+    data: String,
+    descricao: String,
+    categoria: String,
+    tipo: String,
+    valor: String
+}]
+
 app.get('/posts',authenticateToken,(req,res)=>{
     console.log('posts');
     res.json(dados.filter(dado => dado.username===req.user.name));
+})
+
+app.post('/addMovimentacao',authenticateToken,(req,res)=>{
+    console.log(req.body);
+    DBmovimentacao.push(req.body);
+    res.send(JSON.stringify(DBmovimentacao));
 })
 
 function authenticateToken (req, res, next) {

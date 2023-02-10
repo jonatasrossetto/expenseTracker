@@ -9,11 +9,45 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class DashboardComponent implements OnInit {
 
   teste = [{username:'',text:''}];
+  movimentacao = {
+    data: String,
+    descricao: String,
+    categoria: String,
+    tipo: String,
+    valor: String
+  }
+  inputValor : number = 0;
 
   constructor(
     private _router: Router,
     private _activatedRoute:ActivatedRoute
     ) { }
+
+    clickme(){
+      let accessToken = sessionStorage.getItem("accessToken");
+      console.log('click me is running');
+      console.log('Data: '+this.movimentacao.data);
+      console.log('Descrição: '+this.movimentacao.descricao);
+      console.log('Categoria: '+this.movimentacao.categoria);
+      console.log('Tipo: '+this.movimentacao.tipo);
+      console.log('Valor: '+this.movimentacao.valor);
+      const authToken = {token:'Bearer '+accessToken};
+      fetch('http://localhost:3000/addMovimentacao', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': JSON.stringify(authToken)
+            },
+            body:JSON.stringify(this.movimentacao)
+        })
+        .then(response =>{
+          return response.json();
+        }).then(data=>{
+          
+          console.log(data);
+        })
+
+    }
 
     ngOnInit() {
       let accessToken = sessionStorage.getItem("accessToken");
