@@ -56,6 +56,7 @@
                 <th scope="col">Descrição</th>
                 <th scope="col">Categoria</th>
                 <th scope="col">Valor</th>
+                <th scope="col">Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -64,6 +65,7 @@
                 <td>{{dado.descricao}}</td>
                 <td>{{dado.categoria}}</td>
                 <td>{{dado.valor}}</td>
+                <td><button id="{{dado.rowId}}" (click)="deleteBtn(dado.rowId)">Delete</button></td>
               </tr>
               
             </tbody>

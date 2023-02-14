@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const dados = [
+let dados = [
     {rowId: 1, userId:'1', data: '2023-01-02', descricao: 'teste', categoria: 'mercado', tipo: 'saida', valor: '123'},
     {rowId: 2, userId:'1', data: '2023-01-03', descricao: 'teste', categoria: 'carro', tipo: 'saida', valor: '234'},
     {rowId: 3, userId:'1', data: '2023-01-04', descricao: 'teste', categoria: 'extra', tipo: 'saida', valor: '345'},
@@ -22,7 +22,7 @@ const dados = [
     {rowId: 11, userId:'4', data: '2023-01-12', descricao: 'teste', categoria: 'extra', tipo: 'saida', valor: '345'},
 ]
 
-const DBmovimentacao = [{
+let DBmovimentacao = [{
     id: String,
     data: String,
     descricao: String,
@@ -37,9 +37,31 @@ app.get('/posts',authenticateToken,(req,res)=>{
 })
 
 app.post('/addMovimentacao',authenticateToken,(req,res)=>{
-    console.log(req.body);
-    DBmovimentacao.push(req.body);
-    res.send(JSON.stringify(DBmovimentacao));
+    let nextRowId = dados[dados.length-1].rowId+1;
+    console.log('/addMovimentacao')
+    // console.log('userId: '+req.user.id);
+    // console.log('data: '+req.body.data);
+    // console.log('descrição: '+req.body.descricao);
+    // console.log('categoria: '+req.body.categoria);
+    // console.log('tipo: '+req.body.tipo);
+    // console.log('valor: '+req.body.valor);
+    // console.log('nextRowId: '+nextRowId);
+    
+    dados.push(
+        {   rowId: nextRowId, 
+            userId:req.user.id,
+            data: req.body.data,
+            descricao: req.body.descricao,
+            categoria: req.body.categoria,
+            tipo: req.body.tipo,
+            valor: req.body.valor
+        }
+    );
+    res.send(
+        JSON.stringify(
+            dados.filter(dado => dado.userId===req.user.id)
+        ));
+        
 })
 
 function authenticateToken (req, res, next) {

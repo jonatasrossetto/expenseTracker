@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
 
     clickme(){
       let accessToken = sessionStorage.getItem("accessToken");
-      console.log('click me is running');
+      // console.log('click me is running');
       // console.log('Data: '+this.movimentacao.data);
       // console.log('Descrição: '+this.movimentacao.descricao);
       // console.log('Categoria: '+this.movimentacao.categoria);
@@ -44,16 +44,20 @@ export class DashboardComponent implements OnInit {
         .then(response =>{
           return response.json();
         }).then(data=>{
-          console.log(data);
+          this.teste = data; // update table view
         })
 
+    }
+
+    deleteBtn(rowId : number){
+      console.log('deleteBtn for rowId:'+rowId+' was pressed');
     }
 
     ngOnInit() {
       let accessToken = sessionStorage.getItem("accessToken");
       let refreshToken = sessionStorage.getItem("refreshToken");
-      console.log('accessToken: '+accessToken);
-      console.log('refreshToken: '+refreshToken);
+      // console.log('accessToken: '+accessToken);
+      // console.log('refreshToken: '+refreshToken);
       
       const authToken = {token:'Bearer '+accessToken};
       fetch('http://localhost:3000/posts', {
@@ -66,8 +70,7 @@ export class DashboardComponent implements OnInit {
         .then(response =>{
           return response.json();
         }).then(data=>{
-          this.teste = data;
-          console.log(data);
+          this.teste = data; // update table view
         })
     }
 
