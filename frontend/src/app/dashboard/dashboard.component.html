@@ -49,9 +49,25 @@
     <div>
     <br>
     <h3>Movimentações</h3>
-        <h2 *ngFor="let dado of teste">
-            username:{{dado.username}}  :: text:{{dado.text}}
-        </h2>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Data</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dado of teste">
+                <td>{{dado.data}}</td>
+                <td>{{dado.descricao}}</td>
+                <td>{{dado.categoria}}</td>
+                <td>{{dado.valor}}</td>
+              </tr>
+              
+            </tbody>
+          </table>
         <!-- <h2>{{teste[0].text}}</h2>
         <h2>{{teste[1].username}}</h2>
         <h2>{{teste[1].text}}</h2> -->

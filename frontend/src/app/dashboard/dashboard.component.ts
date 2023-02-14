@@ -8,14 +8,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
 
-  teste = [{username:'',text:''}];
   movimentacao = {
+    
     data: String,
     descricao: String,
     categoria: String,
     tipo: String,
     valor: String
   }
+  teste = [{rowId: 0, userId:'', data: '', descricao: '', categoria: '', tipo: '', valor: ''}];
   inputValor : number = 0;
 
   constructor(
@@ -26,11 +27,11 @@ export class DashboardComponent implements OnInit {
     clickme(){
       let accessToken = sessionStorage.getItem("accessToken");
       console.log('click me is running');
-      console.log('Data: '+this.movimentacao.data);
-      console.log('Descrição: '+this.movimentacao.descricao);
-      console.log('Categoria: '+this.movimentacao.categoria);
-      console.log('Tipo: '+this.movimentacao.tipo);
-      console.log('Valor: '+this.movimentacao.valor);
+      // console.log('Data: '+this.movimentacao.data);
+      // console.log('Descrição: '+this.movimentacao.descricao);
+      // console.log('Categoria: '+this.movimentacao.categoria);
+      // console.log('Tipo: '+this.movimentacao.tipo);
+      // console.log('Valor: '+this.movimentacao.valor);
       const authToken = {token:'Bearer '+accessToken};
       fetch('http://localhost:3000/addMovimentacao', {
             method: 'POST',
@@ -43,7 +44,6 @@ export class DashboardComponent implements OnInit {
         .then(response =>{
           return response.json();
         }).then(data=>{
-          
           console.log(data);
         })
 
@@ -67,7 +67,7 @@ export class DashboardComponent implements OnInit {
           return response.json();
         }).then(data=>{
           this.teste = data;
-          // console.log(teste);
+          console.log(data);
         })
     }
 

@@ -12,8 +12,23 @@ app.use(express.json());
 //fake database to store users
 let users = [
     {   username: 'joao',
-        password: '123' 
+        password: '123',
+        userId: '1' 
+    },
+    {   username: 'maria',
+        password: '123',
+        userId: '2' 
+    },
+    {   username: 'paulo',
+        password: '123',
+        userId: '3'
+    },
+    {   username: 'clara',
+        password: '123',
+        userId: '4' 
     }
+
+
 ];
 
 //fake database to store refresh tokens
@@ -40,14 +55,19 @@ app.post('/users',async (req,res)=>{
 })
 
 app.post('/login',(req,res)=>{
-    // AUTHENTICATE THE USER WITHIN DB
     console.log('/login');
     if (!req.headers.authorization) return res.status(401).send('No authorization data provided');
-    console.log('username: '+JSON.parse(req.headers.authorization).username);
-    console.log('password: '+JSON.parse(req.headers.authorization).password);
-    const username = JSON.parse(req.headers.authorization).username;
-    const payload = { name: username };
-    console.log('username: '+payload.name);
+    // AUTHENTICATE THE USER WITHIN DB
+    const validateLoginResponse = validateLogin(
+            JSON.parse(req.headers.authorization).username,
+            JSON.parse(req.headers.authorization).password
+        );
+    if (!validateLoginResponse) {
+        return res.sendStatus(401);
+    }
+    
+    const payload = validateLoginResponse;
+    // console.log('username: '+payload.name+' userId: '+payload.id);
     const accessToken = generateAccessToken(payload);
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
     refreshTokens.push(refreshToken);
@@ -77,7 +97,15 @@ function generateAccessToken(payload){
     return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10min'});
 }
 
-function validateLogin(authData){
+function validateLogin(username, password){
+    const userData = users.find(user => (user.username === username)&&(user.password===password));
+    if (userData) {
+        console.log('username: '+userData.username+' userId: '+userData.userId);
+        return { name: userData.username, id:userData.userId };
+    } else {
+        return null;
+    }
+    
 
 }
 
