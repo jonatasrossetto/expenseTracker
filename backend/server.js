@@ -64,6 +64,20 @@ app.post('/addMovimentacao',authenticateToken,(req,res)=>{
         
 })
 
+app.post('/deleteMovimentacao',authenticateToken,(req,res)=>{
+    console.log('/deleteMovimentacao')
+    console.log('RowId: '+req.body.rowId);
+    let index = dados.findIndex(dado => dado.rowId===req.body.rowId);
+    console.log('index: '+index);
+    dados.splice(index,1);
+    
+    res.send(
+        JSON.stringify(
+            dados.filter(dado => dado.userId===req.user.id)
+        ));
+        // res.send(JSON.stringify({message:"delete request received"}));
+})
+
 function authenticateToken (req, res, next) {
     console.log('begin authenticateToken');
     if (!req.headers.authorization) {
