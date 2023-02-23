@@ -1,6 +1,9 @@
+require('dotenv').config();
+
+
 const Sequelize = require('sequelize');
 //constructor(database: string, username: string, password: string, options: object)
-const sequelize = new Sequelize('booktracker_db','root','321',{dialect: 'mysql', host: 'localhost'});
+const sequelize = new Sequelize('booktracker_db','root',process.env.MYSQL_PASSWORD,{dialect: 'mysql', host: 'localhost'});
 
     // try {
     //     sequelize.authenticate();
