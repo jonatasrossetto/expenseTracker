@@ -57,22 +57,26 @@ export class DashboardComponent implements OnInit {
 
     deleteBtn(rowId : number){
       console.log('deleteBtn for rowId:'+rowId+' was pressed');
-      const authToken = {token:'Bearer '+this.accessToken};
-      //update database
-      fetch('http://localhost:3000/deleteMovimentacao', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': JSON.stringify(authToken)
-            },
-            body:JSON.stringify({rowId: rowId})
-        })
-        .then(response =>{
-          return response.json();
-        }).then(data=>{
-          //console.log(data.message);
-          this.teste = data; // update table view
-        })
+      let confirma=confirm("Deseja apagar a movimentação?")
+      if (confirma==true){
+        const authToken = {token:'Bearer '+this.accessToken};
+        //update database
+        fetch('http://localhost:3000/deleteMovimentacao', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': JSON.stringify(authToken)
+              },
+              body:JSON.stringify({rowId: rowId})
+          })
+          .then(response =>{
+            return response.json();
+          }).then(data=>{
+            //console.log(data.message);
+            this.teste = data; // update table view
+          })
+      }
+      
 
     }
 
