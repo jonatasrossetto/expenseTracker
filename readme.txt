@@ -1,4 +1,4 @@
-This is a simple booktacker web app
+This is a simple expenses loging web app
 It is intended to run on aws ecs
 run commands during development:
    frontend: ng serve --open
