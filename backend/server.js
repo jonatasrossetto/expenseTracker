@@ -1,5 +1,8 @@
 require('dotenv').config(); //enviroment variables
 
+const database = require('./db');
+const Moviment = require("./movimentModel.js");
+
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
@@ -8,8 +11,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+//starts the database connection
+( async() =>{ resultado = await database.sync() });
+
 let dados = [
-    {rowId: 1, userId:'1', data: '2023-01-02', descricao: 'teste', categoria: 'mercado', tipo: 'saida', valor: '123'},
+    {rowId: 1, userId:'1', date: '2023-01-02', descricao: 'teste', categoria: 'mercado', tipo: 'saida', valor: '123'},
     {rowId: 2, userId:'1', data: '2023-01-03', descricao: 'teste', categoria: 'carro', tipo: 'saida', valor: '234'},
     {rowId: 3, userId:'1', data: '2023-01-04', descricao: 'teste', categoria: 'extra', tipo: 'saida', valor: '345'},
     {rowId: 4, userId:'1', data: '2023-01-05', descricao: 'teste', categoria: 'educação', tipo: 'saida', valor: '456'},
@@ -33,7 +39,7 @@ let DBmovimentacao = [{
 
 app.get('/posts',authenticateToken,(req,res)=>{
     console.log('posts');
-    res.json(dados.filter(dado => dado.userId===req.user.id));
+    res.json(dados.filter(dado => dado.userId===req.user.userId));
 })
 
 app.post('/addMovimentacao',authenticateToken,(req,res)=>{
@@ -46,21 +52,43 @@ app.post('/addMovimentacao',authenticateToken,(req,res)=>{
     // console.log('tipo: '+req.body.tipo);
     // console.log('valor: '+req.body.valor);
     // console.log('nextRowId: '+nextRowId);
+    const mov = {
+        userId:req.user.id,
+        date: req.body.date,
+        description: req.body.description,
+        category: req.body.category,
+        type: req.body.type,
+        value: req.body.value
+        };
+    
+    console.log('*** antes');
+    writeMoviment(mov).then(resWrite => {
+        readMoviments(mov.userId).then(resRead =>{
+            res.send(resRead);
+            console.log('*** depois');
+        });
+    });
+    
+    // const leituras = readMoviments(mov.userId);
+    
+    // console.log('leituras:'+leituras);
+
     
     dados.push(
         {   rowId: nextRowId, 
-            userId:req.user.id,
-            data: req.body.data,
-            descricao: req.body.descricao,
-            categoria: req.body.categoria,
-            tipo: req.body.tipo,
-            valor: req.body.valor
+            userId:req.user.userId,
+            date: req.body.date,
+            description: req.body.description,
+            category: req.body.category,
+            type: req.body.type,
+            value: req.body.value
         }
     );
-    res.send(
-        JSON.stringify(
-            dados.filter(dado => dado.userId===req.user.id)
-        ));
+
+    // res.send(
+    //     JSON.stringify(
+    //         dados.filter(dado => dado.userId===req.user.id)
+    //     ));
         
 })
 
@@ -96,6 +124,49 @@ function authenticateToken (req, res, next) {
         req.user = user;
         next();
     })
+}
+
+async function writeMoviment(mov){
+        const start = Date.now();
+        
+        try {
+            console.log('**************************************');
+            console.log('tentando a escrita');  
+            
+            resultadoCreate = await Moviment.create({
+                userId: mov.userId,
+                date: mov.date,
+                description:mov.description,
+                category: mov.category,
+                type: mov.type,
+                value: mov.value
+            });
+            console.log('**************************************');
+            const end = Date.now();
+            return 'hi there writing finished in '+(end-start)+' miliseconds';
+        } catch (error) {
+            console.log(error);
+        }
+    ;
+}
+
+async function readMoviments(userId){
+    const start = Date.now();    
+    try {
+            console.log('**************************************');
+            console.log('tentando a leitura');
+            console.log('**************************************');
+            const resultadoLeitura = await Moviment.findAll({
+                where: {
+                    userId: userId
+                }
+            });
+            const end = Date.now();
+            console.log('read resolved in: '+(end-start)+'miliseconds');
+            return JSON.stringify(resultadoLeitura);
+        } catch (error) {
+            console.log(error);
+        }
 }
 
 app.listen(3000);

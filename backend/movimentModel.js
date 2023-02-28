@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const database = require('./db.js');
 
-const moviment = database.define('user',{
+const moviment = database.define('moviment',{
     movId: {
         type: Sequelize.INTEGER,
         autoIncrement: true,

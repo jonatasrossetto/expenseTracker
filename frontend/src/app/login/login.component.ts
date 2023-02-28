@@ -32,7 +32,7 @@ export class LoginComponent  {
       method: 'POST',
       headers: myHeaders
     };
-    fetch('http://localhost:4000/login', options)
+    fetch('http://localhost:8000/auth/login', options)
       .then(data => {
         if (!data.ok) {
           console.log(data.status);

@@ -6,18 +6,18 @@
         <form class="row gy-2 gx-4 align-items-center">
             <div class="col-auto">
               <label class="visually-hidden" for="autoSizingInput">Data</label>
-              <input type="date" name="inputData" class="form-control" id="autoSizingInput" placeholder="Data" [(ngModel)]="movimentacao.data" >
+              <input type="date" name="inputData" class="form-control" id="autoSizingInput" placeholder="Data" [(ngModel)]="moviment.date" >
             </div>
             <div class="col-sm-4">
               <label class="visually-hidden" for="autoSizingInputGroup">Descrição</label>
               <div class="input-group">
                 
-                <input type="text" name="descricao" class="form-control" id="autoSizingInputGroup" placeholder="Descrição" [(ngModel)]="movimentacao.descricao">
+                <input type="text" name="descricao" class="form-control" id="autoSizingInputGroup" placeholder="Descrição" [(ngModel)]="moviment.description">
               </div>
             </div>
             <div class="col-auto">
               <label class="visually-hidden" for="autoSizingSelect">Preference</label>
-              <select class="form-select" id="autoSizingSelect" name="categoria" [(ngModel)]="movimentacao.categoria">
+              <select class="form-select" id="autoSizingSelect" name="categoria" [(ngModel)]="moviment.category">
                 <!-- <option selected>Categoria...</option> -->
                 <option value="Mercado">Mercado</option>
                 <option value="Saúde">Saúde</option>
@@ -27,7 +27,7 @@
             </div>
             <div class="col-auto">
                 <label class="visually-hidden" for="autoSizingSelect">Preference</label>
-                <select class="form-select" id="autoSizingSelect" name="tipo" [(ngModel)]="movimentacao.tipo">
+                <select class="form-select" id="autoSizingSelect" name="tipo" [(ngModel)]="moviment.type">
                   <!-- <option selected>Entrada/Saída...</option> -->
                   <option value="entrada">Entrada</option>
                   <option value="saída">Saída</option>
@@ -37,7 +37,7 @@
                 <label class="visually-hidden" for="autoSizingInputGroup">Valor</label>
                 <div class="input-group">
                   
-                  <input type="number" name="inputValor" class="form-control"  placeholder="R$" [(ngModel)]="movimentacao.valor">
+                  <input type="number" name="inputValor" class="form-control"  placeholder="R$" [(ngModel)]="moviment.value">
                 </div>
               </div>
             
@@ -61,11 +61,11 @@
             </thead>
             <tbody>
               <tr *ngFor="let dado of teste">
-                <td>{{dado.data}}</td>
-                <td>{{dado.descricao}}</td>
-                <td>{{dado.categoria}}</td>
-                <td>{{dado.valor}}</td>
-                <td><button id="{{dado.rowId}}" (click)="deleteBtn(dado.rowId)">Delete</button></td>
+                <td>{{dado.date}}</td>
+                <td>{{dado.description}}</td>
+                <td>{{dado.category}}</td>
+                <td>{{dado.value}}</td>
+                <td><button id="{{dado.movId}}" (click)="deleteBtn(dado.movId)">Delete</button></td>
               </tr>
               
             </tbody>

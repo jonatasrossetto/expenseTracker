@@ -5,9 +5,9 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+const auth = express.Router();
+auth.use(cors());
+auth.use(express.json());
 
 //fake database to store users
 let users = [
@@ -32,28 +32,28 @@ let users = [
 //fake database to store refresh tokens
 let refreshTokens = [];
 
-app.get('/users',(req,res)=>{
-    console.log('get /users');
+auth.get('/users',(req,res)=>{
+    console.log('get /auth/users');
     res.send(users);
 })
 
-app.post('/users',async (req,res)=>{
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        console.log('hashedPassword: '+hashedPassword);
-        const user = { 
-            username: req.body.username,
-            password: hashedPassword
-        }
-        users.push(user);
-        res.sendStatus(201);
-    } catch {
-        res.sendStatus(500);
-    }
-})
+// auth.post('/register',async (req,res)=>{
+//     try {
+//         const hashedPassword = await bcrypt.hash(req.body.password, 10);
+//         console.log('hashedPassword: '+hashedPassword);
+//         const user = { 
+//             username: req.body.username,
+//             password: hashedPassword
+//         }
+//         users.push(user);
+//         res.sendStatus(201);
+//     } catch {
+//         res.sendStatus(500);
+//     }
+// })
 
-app.post('/login',(req,res)=>{
-    console.log('/login');
+auth.post('/login',(req,res)=>{
+    console.log('auth/login');
     if (!req.headers.authorization) return res.status(401).send('No authorization data provided');
     // AUTHENTICATE THE USER WITHIN DB
     const validateLoginResponse = validateLogin(
@@ -61,7 +61,7 @@ app.post('/login',(req,res)=>{
             JSON.parse(req.headers.authorization).password
         );
     if (!validateLoginResponse) {
-        return res.sendStatus(401);
+        return res.sendStatus(401).send('No authorization data provided');
     }
     
     const payload = validateLoginResponse;
@@ -74,7 +74,7 @@ app.post('/login',(req,res)=>{
     res.json({ accessToken: accessToken, refreshToken: refreshToken });
 })
 
-app.post('/token',(req,res)=>{
+auth.post('/token',(req,res)=>{
     const refreshToken = req.body.token;
     if (refreshToken==null) return res.sendStatus(401); //401 Unauthorized
     if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403) //403 Forbidden
@@ -85,7 +85,7 @@ app.post('/token',(req,res)=>{
     })
 })
 
-app.delete('/logout',(req,res)=>{
+auth.delete('/logout',(req,res)=>{
     refreshTokens = refreshTokens.filter(token => token !== req.body.token);
     res.sendStatus(204);
 })
@@ -107,4 +107,6 @@ function validateLogin(username, password){
 
 }
 
-app.listen(4000);
+
+
+module.exports = auth;

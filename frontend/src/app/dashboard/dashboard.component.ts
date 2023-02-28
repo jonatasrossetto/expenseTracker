@@ -8,23 +8,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
 
-  movimentacao = {
-    data: String(''),
-    descricao: String(''),
-    categoria: String(),
-    tipo: String(),
-    valor: String('')
+  moviment = {
+    date: String(''),
+    description: String(''),
+    category: String(),
+    type: String(),
+    value: String('')
   }
-  teste = [{rowId: 0, userId:'', data: '', descricao: '', categoria: '', tipo: '', valor: ''}];
+  teste = [{movId: 0, userId:'', date: '', description: '', category: '', type: '', value: ''}];
   inputValor : number = 0;
   accessToken = String(sessionStorage.getItem("accessToken"));
 
   constructor(
     private _router: Router,
     private _activatedRoute:ActivatedRoute
-    ) {
-      
-     }
+    ) {}
 
     clickme(){
       //let accessToken = sessionStorage.getItem("accessToken");
@@ -42,17 +40,19 @@ export class DashboardComponent implements OnInit {
               'Content-Type': 'application/json',
               'Authorization': JSON.stringify(authToken)
             },
-            body:JSON.stringify(this.movimentacao)
+            body:JSON.stringify(this.moviment)
         })
         .then(response =>{
+          console.log(response);
           return response.json();
         }).then(data=>{
+          console.log(data);
           this.teste = data; // update table view
         });
-        this.movimentacao.data='';
-        this.movimentacao.descricao='';
-        this.movimentacao.categoria='';
-        this.movimentacao.valor='';
+        this.moviment.date='';
+        this.moviment.description='';
+        this.moviment.category='';
+        this.moviment.value='';
     }
 
     deleteBtn(rowId : number){
