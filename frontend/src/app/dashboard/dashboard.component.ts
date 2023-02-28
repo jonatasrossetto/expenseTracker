@@ -55,8 +55,8 @@ export class DashboardComponent implements OnInit {
         this.moviment.value='';
     }
 
-    deleteBtn(rowId : number){
-      console.log('deleteBtn for rowId:'+rowId+' was pressed');
+    deleteBtn(Id : number){
+      console.log('deleteBtn for rowId:'+Id+' was pressed');
       let confirma=confirm("Deseja apagar a movimentação?")
       if (confirma==true){
         const authToken = {token:'Bearer '+this.accessToken};
@@ -67,7 +67,7 @@ export class DashboardComponent implements OnInit {
                 'Content-Type': 'application/json',
                 'Authorization': JSON.stringify(authToken)
               },
-              body:JSON.stringify({rowId: rowId})
+              body:JSON.stringify({movId: Id})
           })
           .then(response =>{
             return response.json();

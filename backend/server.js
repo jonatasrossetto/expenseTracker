@@ -14,36 +14,15 @@ app.use(express.json());
 //starts the database connection
 ( async() =>{ resultado = await database.sync() });
 
-let dados = [
-    {rowId: 1, userId:'1', date: '2023-01-02', descricao: 'teste', categoria: 'mercado', tipo: 'saida', valor: '123'},
-    {rowId: 2, userId:'1', data: '2023-01-03', descricao: 'teste', categoria: 'carro', tipo: 'saida', valor: '234'},
-    {rowId: 3, userId:'1', data: '2023-01-04', descricao: 'teste', categoria: 'extra', tipo: 'saida', valor: '345'},
-    {rowId: 4, userId:'1', data: '2023-01-05', descricao: 'teste', categoria: 'educação', tipo: 'saida', valor: '456'},
-    {rowId: 5, userId:'2', data: '2023-01-06', descricao: 'teste', categoria: 'mercado', tipo: 'saida', valor: '567'},
-    {rowId: 6, userId:'2', data: '2023-01-07', descricao: 'teste', categoria: 'carro', tipo: 'saida', valor: '789'},
-    {rowId: 7, userId:'2', data: '2023-01-08', descricao: 'teste', categoria: 'extra', tipo: 'saida', valor: '891'},
-    {rowId: 8, userId:'3', data: '2023-01-09', descricao: 'teste', categoria: 'educação', tipo: 'saida', valor: '912'},
-    {rowId: 9, userId:'3', data: '2023-01-10', descricao: 'teste', categoria: 'mercado', tipo: 'saida', valor: '123'},
-    {rowId: 10, userId:'4', data: '2023-01-11', descricao: 'teste', categoria: 'carro', tipo: 'saida', valor: '234'},
-    {rowId: 11, userId:'4', data: '2023-01-12', descricao: 'teste', categoria: 'extra', tipo: 'saida', valor: '345'},
-]
-
-let DBmovimentacao = [{
-    id: String,
-    data: String,
-    descricao: String,
-    categoria: String,
-    tipo: String,
-    valor: String
-}]
-
 app.get('/posts',authenticateToken,(req,res)=>{
-    console.log('posts');
-    res.json(dados.filter(dado => dado.userId===req.user.userId));
+    console.log('/posts');
+    readMoviments(req.user.id).then(resRead =>{
+        res.send(resRead);
+        console.log('*** depois');
+    })
 })
 
 app.post('/addMovimentacao',authenticateToken,(req,res)=>{
-    let nextRowId = dados[dados.length-1].rowId+1;
     console.log('/addMovimentacao')
     // console.log('userId: '+req.user.id);
     // console.log('data: '+req.body.data);
@@ -61,49 +40,23 @@ app.post('/addMovimentacao',authenticateToken,(req,res)=>{
         value: req.body.value
         };
     
-    console.log('*** antes');
     writeMoviment(mov).then(resWrite => {
         readMoviments(mov.userId).then(resRead =>{
             res.send(resRead);
-            console.log('*** depois');
         });
     });
     
-    // const leituras = readMoviments(mov.userId);
-    
-    // console.log('leituras:'+leituras);
-
-    
-    dados.push(
-        {   rowId: nextRowId, 
-            userId:req.user.userId,
-            date: req.body.date,
-            description: req.body.description,
-            category: req.body.category,
-            type: req.body.type,
-            value: req.body.value
-        }
-    );
-
-    // res.send(
-    //     JSON.stringify(
-    //         dados.filter(dado => dado.userId===req.user.id)
-    //     ));
-        
 })
 
 app.post('/deleteMovimentacao',authenticateToken,(req,res)=>{
     console.log('/deleteMovimentacao')
-    console.log('RowId: '+req.body.rowId);
-    let index = dados.findIndex(dado => dado.rowId===req.body.rowId);
-    console.log('index: '+index);
-    dados.splice(index,1);
+    console.log('movId: '+req.body.movId);
+    deleteMoviment(req.body.movId).then(resDelete =>{
+        readMoviments(req.user.id).then(resRead =>{
+            res.send(resRead);
+        });
+    })
     
-    res.send(
-        JSON.stringify(
-            dados.filter(dado => dado.userId===req.user.id)
-        ));
-        // res.send(JSON.stringify({message:"delete request received"}));
 })
 
 function authenticateToken (req, res, next) {
@@ -127,13 +80,9 @@ function authenticateToken (req, res, next) {
 }
 
 async function writeMoviment(mov){
-        const start = Date.now();
-        
-        try {
-            console.log('**************************************');
-            console.log('tentando a escrita');  
-            
-            resultadoCreate = await Moviment.create({
+    try {
+        console.log('writeMoviment mov.userId:'+mov.userId);
+        resultadoCreate = await Moviment.create({
                 userId: mov.userId,
                 date: mov.date,
                 description:mov.description,
@@ -151,22 +100,31 @@ async function writeMoviment(mov){
 }
 
 async function readMoviments(userId){
-    const start = Date.now();    
     try {
-            console.log('**************************************');
-            console.log('tentando a leitura');
-            console.log('**************************************');
+            console.log('readMoviments userId:'+userId);
             const resultadoLeitura = await Moviment.findAll({
                 where: {
                     userId: userId
                 }
             });
-            const end = Date.now();
-            console.log('read resolved in: '+(end-start)+'miliseconds');
             return JSON.stringify(resultadoLeitura);
         } catch (error) {
             console.log(error);
         }
+}
+
+async function deleteMoviment(id){
+    try {
+        console.log('deletMoviment movId:'+id)
+        const resultado = await Moviment.destroy({
+            where: {
+                movId: id
+            }
+        });
+        return JSON.stringify(resultado);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 app.listen(3000);

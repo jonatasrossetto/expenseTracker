@@ -61,7 +61,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let dado of teste">
-                <td>{{dado.date}}</td>
+                <td>{{dado.date.slice(0,10)}}</td>
                 <td>{{dado.description}}</td>
                 <td>{{dado.category}}</td>
                 <td>{{dado.value}}</td>
