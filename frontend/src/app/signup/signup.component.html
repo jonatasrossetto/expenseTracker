@@ -1,1 +1,27 @@
-<p>signup works!</p>
+<div class="container-sm" style="max-width: 330px">
+    <h1>Please sign up</h1>
+    <form>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input type="email" class="form-control" name="inputEmail"  [(ngModel)]="inputEmail">
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" [(ngModel)]="inputPassword" name="inputPassword">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword2" class="form-label">Confirm your password</label>
+            <input type="password" class="form-control" [(ngModel)]="inputPasswordConfirmation" name="inputPasswordConfirmation">
+        </div>
+
+        <!-- <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div> -->
+        <div class="mb-3 text-center">
+            <button type="submit" class="btn btn-primary" (click)="register()">Sign up</button>
+        </div>
+        
+    </form>
+</div>

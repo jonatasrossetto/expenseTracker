@@ -13,6 +13,7 @@ export class LoginComponent  {
   inputUserEmail: string = '';
   inputUserPassword: string = '';
   tokenData = {};
+  
   clickme() {
     console.log('sign-in.js is running');
     console.log('email: '+this.inputUserEmail);
@@ -32,10 +33,12 @@ export class LoginComponent  {
       method: 'POST',
       headers: myHeaders
     };
+
     fetch('http://localhost:8000/auth/login', options)
       .then(data => {
         if (!data.ok) {
           console.log(data.status);
+          alert(data.status);
           return
         }
         return data.json();
@@ -55,6 +58,10 @@ export class LoginComponent  {
         console.log(e);
       });
       
+  }
+
+  signup() {
+    this._router.navigate(['signup']);
   }
 
 }

@@ -57,7 +57,8 @@ export class DashboardComponent implements OnInit {
 
     deleteBtn(Id : number){
       console.log('deleteBtn for rowId:'+Id+' was pressed');
-      let confirma=confirm("Deseja apagar a movimentação?")
+      let confirma=confirm("Deseja apagar a movimentação?");
+      const start = Date.now();
       if (confirma==true){
         const authToken = {token:'Bearer '+this.accessToken};
         //update database
@@ -74,10 +75,11 @@ export class DashboardComponent implements OnInit {
           }).then(data=>{
             //console.log(data.message);
             this.teste = data; // update table view
+            const end = Date.now();
+            console.log('delete completed in: '+(end-start)+'ms');
           })
       }
       
-
     }
 
     ngOnInit() {
