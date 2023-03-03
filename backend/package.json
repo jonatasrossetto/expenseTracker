@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "devIndex": "nodemon index.js",
     "devStart": "nodemon server.js",
     "devStartAuth": "nodemon authServer.js",
     "test": "echo \"Error: no test specified\" && exit 1"

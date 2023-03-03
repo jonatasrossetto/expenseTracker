@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
       // console.log('Valor: '+this.movimentacao.valor);
       const authToken = {token:'Bearer '+this.accessToken};
       //update database
-      fetch('http://localhost:3000/addMovimentacao', {
+      fetch('http://localhost:8000/moviments/addMovimentacao', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit {
       if (confirma==true){
         const authToken = {token:'Bearer '+this.accessToken};
         //update database
-        fetch('http://localhost:3000/deleteMovimentacao', {
+        fetch('http://localhost:8000/moviments/deleteMovimentacao', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export class DashboardComponent implements OnInit {
       // console.log('refreshToken: '+refreshToken);
       
       const authToken = {token:'Bearer '+this.accessToken};
-      fetch('http://localhost:3000/posts', {
+      fetch('http://localhost:8000/moviments/posts', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

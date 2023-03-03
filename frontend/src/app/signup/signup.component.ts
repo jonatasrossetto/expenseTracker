@@ -16,10 +16,28 @@ export class SignupComponent implements OnInit {
 
 
   register(){
-    console.log('register button clicked');
+    console.log('sign up button clicked');
     console.log(this.inputEmail);
     console.log(this.inputPassword);
     console.log(this.inputPasswordConfirmation);
+    
+    const userData = {
+      email: this.inputEmail,
+      password: this.inputPassword
+    }
+
+    fetch('http://localhost:8000/signup/adduser', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body:JSON.stringify(userData)
+        })
+        .then(response =>{
+          return response.json();
+        }).then(response =>{
+          console.log(response);
+        })
     // validateEmail(this.inputEmail);
     // validar dados antes de fazer a requisição
     // enviar dados para o servidor de auth
