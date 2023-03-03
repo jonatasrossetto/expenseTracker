@@ -1,5 +1,8 @@
 require('dotenv').config(); //enviroment variables
 
+const database = require('../services/db.js');
+const User = require('../models/userModel.js');
+
 const cors = require('cors');
 const express = require('express');
 const jwt = require('jsonwebtoken');
@@ -32,29 +35,20 @@ let users = [
 //fake database to store refresh tokens
 let refreshTokens = [];
 
-auth.get('/users',(req,res)=>{
-    console.log('get /auth/users');
-    res.send(users);
+auth.get('/',(req,res)=>{
+    console.log('/auth working fine!!');
+    res.send('/auth working fine!!');
 })
-
-// auth.post('/register',async (req,res)=>{
-//     try {
-//         const hashedPassword = await bcrypt.hash(req.body.password, 10);
-//         console.log('hashedPassword: '+hashedPassword);
-//         const user = { 
-//             username: req.body.username,
-//             password: hashedPassword
-//         }
-//         users.push(user);
-//         res.sendStatus(201);
-//     } catch {
-//         res.sendStatus(500);
-//     }
-// })
 
 auth.post('/login',(req,res)=>{
     console.log('auth/login');
     if (!req.headers.authorization) return res.status(401).send('No authorization data provided');
+    
+    validateLoginDB(
+        JSON.parse(req.headers.authorization).username,
+        JSON.parse(req.headers.authorization).password
+        ).then(response => console.log('validateLoginDB: '+JSON.stringify(response)));
+
     // AUTHENTICATE THE USER WITHIN DB
     const validateLoginResponse = validateLogin(
             JSON.parse(req.headers.authorization).username,
@@ -96,7 +90,9 @@ function generateAccessToken(payload){
 }
 
 function validateLogin(username, password){
+//using fake DB    
     const userData = users.find(user => (user.username === username)&&(user.password===password));
+    
     if (userData) {
         console.log('username: '+userData.username+' userId: '+userData.userId);
         return { name: userData.username, id:userData.userId };
@@ -107,6 +103,21 @@ function validateLogin(username, password){
 
 }
 
+async function validateLoginDB(username, password){
+    //using sequelize and mysql DB
+    try {
+        console.log('login finding username in DB')
+        const resultado = await User.findAll({
+            where: {
+                email: username
+            }
+        });
+        console.log('login resultado: '+resultado.email);
+        return resultado;
+    } catch(error) {
+        console.log(error);
+    }
+}
 
 
 module.exports = auth;

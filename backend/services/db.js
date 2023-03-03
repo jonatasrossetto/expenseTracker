@@ -7,7 +7,7 @@ const Sequelize = require('sequelize');
 const options = {
     dialect: 'mysql', 
     host: 'localhost', 
-    logging: true
+    // logging: true
 }; 
 
 const sequelize = new Sequelize('booktracker_db','root',process.env.MYSQL_PASSWORD,options);
