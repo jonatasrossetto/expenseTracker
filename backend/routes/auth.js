@@ -49,31 +49,19 @@ auth.post('/login',(req,res)=>{
         JSON.parse(req.headers.authorization).password
         ).then(response => {
             console.log('validateLoginDB: '+JSON.stringify(response))
-
-
-
-
-            
+            if (response.name=='') {
+                return res.sendStatus(401);
+            } else {
+                const payload = response;
+                console.log('username: '+payload.name+' userId: '+payload.id);
+                const accessToken = generateAccessToken(payload);
+                const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
+                refreshTokens.push(refreshToken);
+                console.log('access token: '+accessToken);
+                console.log('refresh token: '+refreshToken);
+                res.json({ accessToken: accessToken, refreshToken: refreshToken });
+            }
         });
-
-    // AUTHENTICATE THE USER WITHIN DB
-    // const validateLoginResponse = validateLogin(
-    //         JSON.parse(req.headers.authorization).username,
-    //         JSON.parse(req.headers.authorization).password
-    //     );
-    
-    if (validateLoginResponse.name=='') {
-            return res.sendStatus(401);
-    } else {
-        const payload = validateLoginResponse;
-        console.log('username: '+payload.name+' userId: '+payload.id);
-        const accessToken = generateAccessToken(payload);
-        const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
-        refreshTokens.push(refreshToken);
-        console.log('access token: '+accessToken);
-        console.log('refresh token: '+refreshToken);
-        res.json({ accessToken: accessToken, refreshToken: refreshToken });
-    }
 })
 
 auth.post('/token',(req,res)=>{
