@@ -12,12 +12,6 @@ const signup = express.Router();
 signup.use(cors());
 signup.use(express.json());
 
-// //starts the database connection
-// ( async() =>{ 
-//     resultado = await database.sync(); 
-//     console.log(resultado)
-// });
-
 signup.get('/',(req,res)=>{
     console.log('signup!!')
     res.send('Signup route is working fine!!');

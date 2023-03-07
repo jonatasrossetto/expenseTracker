@@ -27,6 +27,7 @@ console.log('Express started on port 8000');
 
 function initalizeDb(){
   (async () => {
+    console.log('\n\n\n');
     console.log('inicializa o banco de dados')
     const database = require('./services/db');  
       const user = require('./models/userModel.js');

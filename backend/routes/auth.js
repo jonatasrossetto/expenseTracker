@@ -42,30 +42,38 @@ auth.get('/',(req,res)=>{
 
 auth.post('/login',(req,res)=>{
     console.log('auth/login');
-    if (!req.headers.authorization) return res.status(401).send('No authorization data provided');
-    
-    validateLoginDB(
+    if (!req.headers.authorization) return res.sendStatus(401);
+        
+    const validateLoginResponse = validateLoginDB(
         JSON.parse(req.headers.authorization).username,
         JSON.parse(req.headers.authorization).password
-        ).then(response => console.log('validateLoginDB: '+JSON.stringify(response)));
+        ).then(response => {
+            console.log('validateLoginDB: '+JSON.stringify(response))
+
+
+
+
+            
+        });
 
     // AUTHENTICATE THE USER WITHIN DB
-    const validateLoginResponse = validateLogin(
-            JSON.parse(req.headers.authorization).username,
-            JSON.parse(req.headers.authorization).password
-        );
-    if (!validateLoginResponse) {
-        return res.sendStatus(401).send('No authorization data provided');
-    }
+    // const validateLoginResponse = validateLogin(
+    //         JSON.parse(req.headers.authorization).username,
+    //         JSON.parse(req.headers.authorization).password
+    //     );
     
-    const payload = validateLoginResponse;
-    // console.log('username: '+payload.name+' userId: '+payload.id);
-    const accessToken = generateAccessToken(payload);
-    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
-    refreshTokens.push(refreshToken);
-    console.log('access token: '+accessToken);
-    console.log('refresh token: '+refreshToken);
-    res.json({ accessToken: accessToken, refreshToken: refreshToken });
+    if (validateLoginResponse.name=='') {
+            return res.sendStatus(401);
+    } else {
+        const payload = validateLoginResponse;
+        console.log('username: '+payload.name+' userId: '+payload.id);
+        const accessToken = generateAccessToken(payload);
+        const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
+        refreshTokens.push(refreshToken);
+        console.log('access token: '+accessToken);
+        console.log('refresh token: '+refreshToken);
+        res.json({ accessToken: accessToken, refreshToken: refreshToken });
+    }
 })
 
 auth.post('/token',(req,res)=>{
@@ -107,13 +115,27 @@ async function validateLoginDB(username, password){
     //using sequelize and mysql DB
     try {
         console.log('login finding username in DB')
-        const resultado = await User.findAll({
+        const isValid = await User.findAll({
             where: {
                 email: username
             }
+        }).then(result => {
+            if (result.length!==0){
+                    // const email = result[0].email;
+                    // const id = result[0].userId;
+                    let resultado = bcrypt.compare(password,result[0].password).then(match =>{
+                        if (match==true) {
+                            return { name: result[0].email, id: result[0].userId };
+                        } else {
+                            return { name: '', id: '' };
+                        }    
+                    })
+                    return resultado;
+            } else {
+                return { name: '', id: '' };
+            }
         });
-        console.log('login resultado: '+resultado.email);
-        return resultado;
+        return isValid;
     } catch(error) {
         console.log(error);
     }

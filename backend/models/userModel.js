@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const database = require('../services/db.js');
 
-console.log('userModel running');
+// console.log('userModel running');
 
 const user = database.define('user',{
     userId: {
