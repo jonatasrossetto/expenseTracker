@@ -52,6 +52,7 @@
         <table class="table table-hover">
             <thead>
               <tr>
+                <!-- <th scope="col">movId</th> -->
                 <th scope="col">Data</th>
                 <th scope="col">Descrição</th>
                 <th scope="col">Categoria</th>
@@ -61,13 +62,14 @@
             </thead>
             <tbody>
               <tr *ngFor="let dado of teste">
+                <!-- <td>{{dado.movId}}</td> -->
                 <td>{{dado.date.slice(0,10)}}</td>
                 <td>{{dado.description}}</td>
                 <td>{{dado.category}}</td>
                 <td>{{dado.value}}</td>
                 <td>
-                  <button type="button" class="btn btn-primary" id="{{dado.movId}}" (click)="deleteBtn(dado.movId)">Delete</button>  ....
-                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  <button type="button" class="btn btn-primary me-3"  (click)="deleteBtn(dado.movId)">Delete</button>  
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"   (click)="openEditModalBtn(dado.movId)">
                     Edit
                   </button>
                 </td>
@@ -86,24 +88,24 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Edit moviment</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeEditModalBtn()"></button>
       </div>
       <div class="modal-body">
         <div class="col-auto mt-1">
           <label>Data</label>
-          <input type="date" name="inputData" class="form-control" id="autoSizingInput" placeholder="Data" [(ngModel)]="moviment.date" >
+          <input type="date" name="inputData" class="form-control" id="autoSizingInput" placeholder="Data" [(ngModel)]="editMoviment.date" >
         </div>
         
         <div class="col-auto mt-2">
           <label>Descrição</label>
           <div class="input-group">
-            <input type="text" name="descricao" class="form-control" id="autoSizingInputGroup" placeholder="Descrição" [(ngModel)]="moviment.description">
+            <input type="text" name="descricao" class="form-control" id="autoSizingInputGroup" placeholder="Descrição" [(ngModel)]="editMoviment.description">
           </div>
         </div>
         
         <div class="col-auto mt-2">
           <label>Categoria</label>
-          <select class="form-select" id="autoSizingSelect" name="categoria" [(ngModel)]="moviment.category">
+          <select class="form-select" id="autoSizingSelect" name="categoria" [(ngModel)]="editMoviment.category">
             <option value="Mercado">Mercado</option>
             <option value="Saúde">Saúde</option>
             <option value="Educação">Educação</option>
@@ -113,7 +115,7 @@
         
         <div class="col-auto mt-2">
             <label>Entrada/Saída</label>
-            <select class="form-select" id="autoSizingSelect" name="tipo" [(ngModel)]="moviment.type">
+            <select class="form-select" id="autoSizingSelect" name="tipo" [(ngModel)]="editMoviment.type">
               <option value="entrada">Entrada</option>
               <option value="saída">Saída</option>
             </select>
@@ -122,13 +124,13 @@
         <div class="col-auto mt-2 ">
           <label>Valor</label>
           <div class="input-group">
-            <input type="number" name="inputValor" class="form-control"  placeholder="R$" [(ngModel)]="moviment.value">
+            <input type="number" name="inputValor" class="form-control"  placeholder="R$" [(ngModel)]="editMoviment.value">
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeEditModalBtn()">Close</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="saveEditModalBtn(this.editMoviment.movId)">Save changes</button>
       </div>
     </div>
   </div>

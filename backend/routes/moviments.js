@@ -51,6 +51,34 @@ moviments.post('/addMovimentacao',authenticateToken,(req,res)=>{
     
 })
 
+moviments.post('/updateMovimentacao',authenticateToken,(req,res)=>{
+    console.log('/updateMovimentacao')
+    console.log('movId: '+req.body.movId);
+    console.log('userId: '+req.user.id);
+    console.log('data: '+req.body.date);
+    console.log('descrição: '+req.body.description);
+    console.log('categoria: '+req.body.category);
+    console.log('tipo: '+req.body.type);
+    console.log('valor: '+req.body.value);
+    
+    const mov = {
+        movId: req.body.movId, 
+        userId:req.user.id,
+        date: req.body.date,
+        description: req.body.description,
+        category: req.body.category,
+        type: req.body.type,
+        value: req.body.value
+        };
+    
+    updateMoviment(mov).then(resWrite => {
+        readMoviments(mov.userId).then(resRead =>{
+            res.send(resRead);
+        });
+    });
+    
+})
+
 moviments.post('/deleteMovimentacao',authenticateToken,(req,res)=>{
     console.log('/deleteMovimentacao')
     console.log('movId: '+req.body.movId);
@@ -97,7 +125,6 @@ async function writeMoviment(mov){
         } catch (error) {
             console.log(error);
         }
-    ;
 }
 
 async function readMoviments(userId){
@@ -126,6 +153,24 @@ async function deleteMoviment(id){
     } catch (error) {
         console.log(error);
     }
+}
+
+async function updateMoviment(mov){
+    try {
+        console.log('updateMoviment mov.movId:'+mov.movId);
+        resultadoCreate = await Moviment.update({
+                date: mov.date,
+                description:mov.description,
+                category: mov.category,
+                type: mov.type,
+                value: mov.value
+            },{
+                where: { movId: mov.movId}
+            });
+            return 'updateMoviment ok';
+        } catch (error) {
+            console.log(error);
+        }
 }
 
 module.exports = moviments;

@@ -14,7 +14,17 @@ export class DashboardComponent implements OnInit {
     category: String(),
     type: String(),
     value: String('')
-  }
+  };
+
+  editMoviment = {
+    movId: Number(0),
+    date: String(''),
+    description: String(''),
+    category: String(),
+    type: String(),
+    value: String('')
+  };
+
   teste = [{movId: 0, userId:'', date: '', description: '', category: '', type: '', value: ''}];
   inputValor : number = 0;
   accessToken = String(sessionStorage.getItem("accessToken"));
@@ -43,7 +53,17 @@ export class DashboardComponent implements OnInit {
             body:JSON.stringify(this.moviment)
         })
         .then(response =>{
-          console.log(response);
+          if (response.status==403) {
+            console.log('response status is 403');
+            sessionStorage.clear();
+            this._router.navigate(['login']);
+            // return [{movId: 0,
+            //   date: '',
+            //   description: '',
+            //   category: '',
+            //   type: '',
+            //   value: ''}]
+          }
           return response.json();
         }).then(data=>{
           console.log(data);
@@ -71,6 +91,17 @@ export class DashboardComponent implements OnInit {
               body:JSON.stringify({movId: Id})
           })
           .then(response =>{
+            if (response.status==403) {
+              console.log('response status is 403');
+              sessionStorage.clear();
+              this._router.navigate(['login']);
+              // return [{movId: 0,
+              //   date: '',
+              //   description: '',
+              //   category: '',
+              //   type: '',
+              //   value: ''}]
+            }
             return response.json();
           }).then(data=>{
             //console.log(data.message);
@@ -80,6 +111,60 @@ export class DashboardComponent implements OnInit {
           })
       }
       
+    }
+
+    openEditModalBtn(Id : number){
+      //fills modal fields for edition
+      console.log('openEditModalBtn clicked on moviment:'+Id);
+      const selectedMoviment = this.teste.filter(data => data.movId===Id);
+      // console.log(selectedMoviment);
+      this.editMoviment.movId=Id;
+      this.editMoviment.date=selectedMoviment[0].date.slice(0,10);
+      this.editMoviment.description=selectedMoviment[0].description;
+      this.editMoviment.category=selectedMoviment[0].category;
+      this.editMoviment.type=selectedMoviment[0].type;
+      this.editMoviment.value=selectedMoviment[0].value;
+    }
+
+    closeEditModalBtn(){
+      this.editMoviment.movId=0;
+      this.editMoviment.date='';
+      this.editMoviment.description='';
+      this.editMoviment.category='';
+      this.editMoviment.type='';
+      this.editMoviment.value='';
+    }
+
+    saveEditModalBtn(Id:number){
+      console.log('saveEditModalBtn clicked for Id:'+Id);
+      console.log(this.editMoviment);
+      const authToken = {token:'Bearer '+this.accessToken};
+      fetch('http://localhost:8000/moviments/updateMovimentacao', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': JSON.stringify(authToken)
+            },
+            body:JSON.stringify(this.editMoviment)
+        })
+        .then(response =>{
+          if (response.status==403) {
+            console.log('response status is 403');
+            sessionStorage.clear();
+            this._router.navigate(['login']);
+            // return [{movId: 0,
+            //   date: '',
+            //   description: '',
+            //   category: '',
+            //   type: '',
+            //   value: ''}]
+          }
+          return response.json();
+        }).then(data=>{
+          console.log(data);
+          this.teste = data; // update table view
+        });
+
     }
 
     ngOnInit() {
@@ -97,6 +182,17 @@ export class DashboardComponent implements OnInit {
             }
         })
         .then(response =>{
+          if (response.status==403) {
+            console.log('response status is 403');
+            sessionStorage.clear();
+            this._router.navigate(['login']);
+            // return [{movId: 0,
+            //   date: '',
+            //   description: '',
+            //   category: '',
+            //   type: '',
+            //   value: ''}]
+          }
           return response.json();
         }).then(data=>{
           this.teste = data; // update table view
