@@ -65,7 +65,12 @@
                 <td>{{dado.description}}</td>
                 <td>{{dado.category}}</td>
                 <td>{{dado.value}}</td>
-                <td><button id="{{dado.movId}}" (click)="deleteBtn(dado.movId)">Delete</button></td>
+                <td>
+                  <button type="button" class="btn btn-primary" id="{{dado.movId}}" (click)="deleteBtn(dado.movId)">Delete</button>  ....
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Edit
+                  </button>
+                </td>
               </tr>
               
             </tbody>
@@ -75,5 +80,58 @@
         <h2>{{teste[1].text}}</h2> -->
     </div>
     
+    <!-- Modal Edit Moviment -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit moviment</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="col-auto mt-1">
+          <label>Data</label>
+          <input type="date" name="inputData" class="form-control" id="autoSizingInput" placeholder="Data" [(ngModel)]="moviment.date" >
+        </div>
+        
+        <div class="col-auto mt-2">
+          <label>Descrição</label>
+          <div class="input-group">
+            <input type="text" name="descricao" class="form-control" id="autoSizingInputGroup" placeholder="Descrição" [(ngModel)]="moviment.description">
+          </div>
+        </div>
+        
+        <div class="col-auto mt-2">
+          <label>Categoria</label>
+          <select class="form-select" id="autoSizingSelect" name="categoria" [(ngModel)]="moviment.category">
+            <option value="Mercado">Mercado</option>
+            <option value="Saúde">Saúde</option>
+            <option value="Educação">Educação</option>
+            <option value="Carro">Carro</option>
+          </select>
+        </div>
+        
+        <div class="col-auto mt-2">
+            <label>Entrada/Saída</label>
+            <select class="form-select" id="autoSizingSelect" name="tipo" [(ngModel)]="moviment.type">
+              <option value="entrada">Entrada</option>
+              <option value="saída">Saída</option>
+            </select>
+        </div>
+        
+        <div class="col-auto mt-2 ">
+          <label>Valor</label>
+          <div class="input-group">
+            <input type="number" name="inputValor" class="form-control"  placeholder="R$" [(ngModel)]="moviment.value">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
             
 </body>

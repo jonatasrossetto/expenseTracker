@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
     private _activatedRoute:ActivatedRoute
     ) {}
 
-    clickme(){
+  clickme(){
       //let accessToken = sessionStorage.getItem("accessToken");
       // console.log('click me is running');
       // console.log('Data: '+this.movimentacao.data);
@@ -83,13 +83,13 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit() {
-      //let accessToken = sessionStorage.getItem("accessToken");
-      let refreshToken = sessionStorage.getItem("refreshToken");
-      // console.log('accessToken: '+accessToken);
+      const accessToken = sessionStorage.getItem("accessToken");
+      //let refreshToken = sessionStorage.getItem("refreshToken");
+      console.log('accessToken: '+accessToken);
       // console.log('refreshToken: '+refreshToken);
-      
-      const authToken = {token:'Bearer '+this.accessToken};
-      fetch('http://localhost:8000/moviments/posts', {
+      if (accessToken!==null){
+        const authToken = {token:'Bearer '+this.accessToken};
+        fetch('http://localhost:8000/moviments/posts', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -101,6 +101,10 @@ export class DashboardComponent implements OnInit {
         }).then(data=>{
           this.teste = data; // update table view
         })
+      } else {
+        this._router.navigate(['login']);
+      }
+      
     }
 
   

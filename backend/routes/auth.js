@@ -53,12 +53,12 @@ auth.post('/login',(req,res)=>{
                 return res.sendStatus(401);
             } else {
                 const payload = response;
-                console.log('username: '+payload.name+' userId: '+payload.id);
+                // console.log('username: '+payload.name+' userId: '+payload.id);
                 const accessToken = generateAccessToken(payload);
                 const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
                 refreshTokens.push(refreshToken);
-                console.log('access token: '+accessToken);
-                console.log('refresh token: '+refreshToken);
+                // console.log('access token: '+accessToken);
+                // console.log('refresh token: '+refreshToken);
                 res.json({ accessToken: accessToken, refreshToken: refreshToken });
             }
         });
@@ -85,19 +85,19 @@ function generateAccessToken(payload){
     return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10min'});
 }
 
-function validateLogin(username, password){
-//using fake DB    
-    const userData = users.find(user => (user.username === username)&&(user.password===password));
+// function validateLogin(username, password){
+// //using fake DB    
+//     const userData = users.find(user => (user.username === username)&&(user.password===password));
     
-    if (userData) {
-        console.log('username: '+userData.username+' userId: '+userData.userId);
-        return { name: userData.username, id:userData.userId };
-    } else {
-        return null;
-    }
+//     if (userData) {
+//         console.log('username: '+userData.username+' userId: '+userData.userId);
+//         return { name: userData.username, id:userData.userId };
+//     } else {
+//         return null;
+//     }
     
 
-}
+// }
 
 async function validateLoginDB(username, password){
     //using sequelize and mysql DB
